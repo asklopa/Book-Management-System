@@ -58,11 +58,16 @@ function App() {
 
   const handleAddOrUpdate = async (book) => {
     try {
+      const cleanBook = {
+        ...book,
+        year: String(book.year || ""),
+      };
+
       if (editingBook) {
-        await updateBook(editingBook.id, book);
+        await updateBook(editingBook.id, cleanBook);
         setEditingBook(null);
       } else {
-        await addBook(book);
+        await addBook(cleanBook);
       }
 
       await fetchBooks();

@@ -9,17 +9,16 @@ function BookForm({ onSubmit, editingBook }) {
     year: "",
   });
 
-  // 🔥 Fill form when editing
+  // Fill form when editing
   useEffect(() => {
     if (editingBook) {
       setBook({
         title: editingBook.title || "",
         author: editingBook.author || "",
         genre: editingBook.genre || "",
-        year: editingBook.year || "",
+        year: String(editingBook.year || ""), // 🔥 FIX HERE
       });
     } else {
-      // reset when switching back to add mode
       setBook({
         title: "",
         author: "",
@@ -31,29 +30,28 @@ function BookForm({ onSubmit, editingBook }) {
 
   // input handler
   const handleChange = (e) => {
-    setBook({
-      ...book,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setBook((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   // submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // update mode
     if (editingBook) {
       onSubmit({
         id: editingBook.id,
         ...book,
       });
-    }
-    // add mode
-    else {
+    } else {
       onSubmit(book);
     }
 
-    // reset form after submit
+    // reset form
     setBook({
       title: "",
       author: "",
@@ -64,13 +62,12 @@ function BookForm({ onSubmit, editingBook }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack spacing={2}>
+      <Stack spacing={2} sx={{ width: "100%" }}>
         <TextField
           label="Title"
           name="title"
           value={book.title}
           onChange={handleChange}
-          placeholder="Enter book title"
           fullWidth
         />
 
@@ -79,7 +76,6 @@ function BookForm({ onSubmit, editingBook }) {
           name="author"
           value={book.author}
           onChange={handleChange}
-          placeholder="Enter author name"
           fullWidth
         />
 
@@ -88,16 +84,14 @@ function BookForm({ onSubmit, editingBook }) {
           name="genre"
           value={book.genre}
           onChange={handleChange}
-          placeholder="Enter genre"
           fullWidth
         />
 
         <TextField
           label="Year"
           name="year"
-          value={book.year}
+          value={book.year || ""}   // 🔥 extra safety
           onChange={handleChange}
-          placeholder="Enter publication year"
           fullWidth
         />
 
