@@ -57,30 +57,17 @@ function App() {
   }, []);
 
   const handleAddOrUpdate = async (book) => {
-    console.log("👉 FUNCTION TRIGGERED");
-    console.log("BOOK DATA:", book);
-    console.log("EDITING BOOK:", editingBook);
-
     try {
       if (editingBook) {
-        console.log("✏️ UPDATE MODE");
-        console.log("Updating ID:", editingBook.id);
-
-        const res = await updateBook(editingBook.id, book);
-        console.log("UPDATE RESPONSE:", res);
+        await updateBook(editingBook.id, book);
         setEditingBook(null);
       } else {
-        console.log("➕ ADD MODE");
-
-        const res = await addBook(book);
-        console.log("ADD RESPONSE:", res);
+        await addBook(book);
       }
 
-      console.log("🔄 Fetching updated books...");
       await fetchBooks();
-      console.log("✅ Fetch complete");
     } catch (error) {
-      console.error("❌ ERROR OCCURRED:", error);
+      console.error(error);
       alert("Operation failed");
     }
   };
